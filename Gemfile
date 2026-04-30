@@ -5,7 +5,7 @@ source "https://rubygems.org"
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 group :development, :test do
-  gem "defra_ruby_style", "~> 0.3"
+  gem "defra_ruby_style"
   gem "dotenv"
   # Shim to load environment variables from a .env file into ENV
   # Allows us to automatically generate the change log from the tags, issues,
@@ -21,6 +21,7 @@ group :development, :test do
   gem "rspec"
   gem "rspec-rails"
   gem "rubocop", require: false
+  gem "rubocop-factory_bot"
   gem "rubocop-rake", require: false
   gem "rubocop-rspec"
   gem "rubocop-rspec_rails"

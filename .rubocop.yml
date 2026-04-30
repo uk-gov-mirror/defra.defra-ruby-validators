@@ -4,17 +4,23 @@ inherit_gem:
   defra_ruby_style:
     - default.yml
 
-require:
-  - rubocop-rspec
+plugins:
   - rubocop-rspec_rails
-  - rubocop-rake
 
 Lint/EmptyClass:
   AllowComments: true
 
+Naming/PredicateMethod:
+  AllowedMethods:
+    - call
+    - validate_each
+
 # In some cases using more memoized helpers makes specs more readable:
 RSpec/MultipleMemoizedHelpers:
   Max: 6
+
+RSpec/LeakyLocalVariable:
+  Enabled: false
 
 # Rubocop counts < RSpec.describe / describe / context / context > as four levels of nesting,
 # when in reality it is a reasonable two levels.
