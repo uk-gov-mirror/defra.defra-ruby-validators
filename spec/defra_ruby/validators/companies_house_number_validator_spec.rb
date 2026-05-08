@@ -22,6 +22,14 @@ module Test
     validates :company_no, "defra_ruby/validators/companies_house_number": { permitted_types: %w[llp ltd] }
   end
 
+  CompaniesHousePermittedStatusesAndNumberValidatable = Struct.new(:company_no) do
+    include ActiveModel::Validations
+
+    validates :company_no, "defra_ruby/validators/companies_house_number": {
+      permitted_statuses: %i[active voluntary-arrangement liquidation]
+    }
+  end
+
   CompaniesHouseInvalidPermittedTypesAndNumberValidatable = Struct.new(:company_no) do
     include ActiveModel::Validations
 
@@ -137,7 +145,7 @@ module DefraRuby
               Test::CompaniesHouseSinglePermittedTypeAndNumberValidatable.new(valid_numbers.first).valid?
 
               expect(CompaniesHouseService).to have_received(:new)
-                .with(company_number: valid_numbers.first, permitted_types: "ltd")
+                .with(company_number: valid_numbers.first, permitted_types: "ltd", permitted_statuses: nil)
             end
           end
 
@@ -148,7 +156,18 @@ module DefraRuby
               Test::CompaniesHouseMultiplePermittedTypesAndNumberValidatable.new(valid_numbers.first).valid?
 
               expect(CompaniesHouseService).to have_received(:new)
-                .with(company_number: valid_numbers.first, permitted_types:)
+                .with(company_number: valid_numbers.first, permitted_types:, permitted_statuses: nil)
+            end
+          end
+
+          context "with multiple permitted_statuses options" do
+            let(:permitted_statuses) { %i[active voluntary-arrangement liquidation] }
+
+            it "calls the companies house service with all permitted statuses" do
+              Test::CompaniesHousePermittedStatusesAndNumberValidatable.new(valid_numbers.first).valid?
+
+              expect(CompaniesHouseService).to have_received(:new)
+                .with(company_number: valid_numbers.first, permitted_types: nil, permitted_statuses:)
             end
           end
 

@@ -5,7 +5,12 @@ inherit_gem:
     - default.yml
 
 plugins:
+  - rubocop-rake
+  - rubocop-rspec
   - rubocop-rspec_rails
+
+AllCops:
+  TargetRubyVersion: 3.2
 
 Lint/EmptyClass:
   AllowComments: true

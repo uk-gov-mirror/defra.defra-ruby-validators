@@ -7,5 +7,5 @@ en:
         not_found: Companies House couldn't find a company with this number
         inactive: Your company must be registered as an active company
         unsupported_company_type: Your company must be registered as a limited company or a limited liability partnership
-        argument_error: Invalid permitted_types value. It must be nil, a string or an array of strings.
+        argument_error: Invalid permitted_types or permitted_statuses value. It must be nil, a string or an array.
         error: There was an error connecting with Companies House. Hopefully this is a one off and will work if you try again.

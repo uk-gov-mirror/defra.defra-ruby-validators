@@ -63,9 +63,10 @@ This validator checks the company registration number provided. Specifically it 
 If the format is valid, it then makes a call to Companies House to validate that the number
 
 - is recognised
-- belongs to an 'active' company
+- belongs to a company with an allowed status
 
-A company can be in various states for example liquidation, which means for the purposes of Defra its not a valid entity. So we check the status along with the number as part of the validation.
+Allowed statuses default to `active` and `voluntary-arrangement`, preserving the existing behaviour.
+Services can override this when they need to accept other Companies House statuses.
 
 Add it to your model or form object using
 
@@ -77,6 +78,14 @@ The company number also accepts a `company_type` option. This checks the `type` 
 
 ```ruby
 validates :company_no, "defra_ruby/validators/companies_house_number": { company_type: "ltd" }
+```
+
+The allowed Companies House statuses can be changed with the `permitted_statuses` option:
+
+```ruby
+validates :company_no, "defra_ruby/validators/companies_house_number": {
+  permitted_statuses: %i[active voluntary-arrangement liquidation]
+}
 ```
 
 Note: to mock the Companies House service with the `company_type` option, you will need to be running at least v2.2.0 of [defra-ruby-mocks](https://github.com/DEFRA/defra-ruby-mocks#companies-house).

@@ -17,7 +17,8 @@ module DefraRuby
         return false unless format_is_valid?(record, attribute, value)
 
         permitted_types = options[:permitted_types]
-        validate_with_companies_house(record, attribute, value, permitted_types)
+        permitted_statuses = options[:permitted_statuses]
+        validate_with_companies_house(record, attribute, value, permitted_types, permitted_statuses)
       end
 
       private
@@ -37,8 +38,8 @@ module DefraRuby
         false
       end
 
-      def validate_with_companies_house(record, attribute, value, permitted_types)
-        case CompaniesHouseService.new(company_number: value, permitted_types:).status
+      def validate_with_companies_house(record, attribute, value, permitted_types, permitted_statuses)
+        case CompaniesHouseService.new(company_number: value, permitted_types:, permitted_statuses:).status
         when :active
           true
         when :inactive

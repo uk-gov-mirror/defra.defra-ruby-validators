@@ -66,6 +66,47 @@ RSpec.describe DefraRuby::Validators::CompaniesHouseService do
       end
     end
 
+    context "when the company_number has a liquidation status" do
+      let(:company_status) { :liquidation }
+
+      it "returns :inactive by default" do
+        expect(companies_house_service.status).to eq(:inactive)
+      end
+    end
+
+    context "when checking the company_status" do
+      subject(:companies_house_service) { described_class.new(company_number: "09360070", permitted_statuses:) }
+
+      context "when an invalid permitted company statuses value is specified" do
+        let(:permitted_statuses) { 0 }
+
+        it { expect { companies_house_service.status }.to raise_error(ArgumentError) }
+      end
+
+      context "when a single permitted company status is specified" do
+        let(:permitted_statuses) { "liquidation" }
+        let(:company_status) { :liquidation }
+
+        it { expect(companies_house_service.status).to eq(:active) }
+      end
+
+      context "when multiple permitted company statuses are specified" do
+        let(:permitted_statuses) { %i[active voluntary-arrangement liquidation] }
+
+        context "when the actual status is liquidation" do
+          let(:company_status) { :liquidation }
+
+          it { expect(companies_house_service.status).to eq(:active) }
+        end
+
+        context "when the actual status is dissolved" do
+          let(:company_status) { :dissolved }
+
+          it { expect(companies_house_service.status).to eq(:inactive) }
+        end
+      end
+    end
+
     context "when checking the company_type" do
       subject(:companies_house_service) { described_class.new(company_number: "09360070", permitted_types:) }
 
